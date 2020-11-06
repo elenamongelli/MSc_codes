@@ -1,0 +1,28 @@
+/appl/star-ccm/14.06.012-R8/14.06.012-R8/STAR-CCM+14.06.012-R8/star/bin/starccm+ -server -rsh ssh -power -licpath 1999@flex.cd-adapco.com -podkey JG12LJOFHR99y48vkMD9wA
+
+#!/bin/sh
+# embedded options to bsub - start with #BSUB
+# -- job name ---
+#BSUB -J starccm_mpi
+# -- Notify me by email when execution begins  --
+#BSUB -B
+# -- Notify me by email when execution ends    --
+#BSUB -N
+# -- email address -- 
+# please uncomment the following line and put in your e-mail address,
+# if you want to receive e-mail notifications on a non-default address
+#BSUB -u s181214@student.dtu.dk
+# -- estimated wall clock time (execution time) --
+#BSUB -W  4:00
+### -- specify that we need 2GB of memory per core/slot -- 
+#BSUB -R "rusage[mem=2GB]"
+# -- parallel environment requests: 8 cores --
+#BSUB -n 8
+### -- specify how the cores must be assigned: 4 on each node --
+#BSUB -R "span[ptile=4]"
+### -- Specify the output and error file. %J is the job-id -- 
+### -- -o and -e mean append, -oo and -eo mean overwrite -- 
+#BSUB -o Output_%J.out 
+#BSUB -e Error_%J.err 
+
+/appl/star-ccm/14.06.012-R8/STAR-CCM+14.06.012-R8/star/bin/starccm+ -batch -bs lsf -np $LSB_DJOB_NUMPROC -mpi intel -rsh blaunch  -power -licpath 1999@flex.cd-adapco.com -podkey JG12LJOFHR99y48vkMD9wA test1.sim
